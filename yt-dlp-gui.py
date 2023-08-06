@@ -28,15 +28,17 @@ def download_single():
                 "yt-dlp",
                 "-x",
                 "--audio-format",
-                "mp2",
+                "mp3",
                 "--audio-quality",
-                "-1",
+                "0",
                 "-o",
                 "music/%(title)s.%(ext)s",
                 "--embed-metadata",
                 youtube_url,
-            ]
+            ],
+            stdout=open("/dev/null", "wb")
         )
+        print(f"{youtube_url} was downloaded successfully!")
 
 
 def download_multiple():
