@@ -5,7 +5,8 @@ import sys
 from time import sleep as stop
 
 # Settings
-music_directory: str = "./music"
+MUSIC_DIRECTORY: str = "music"
+
 
 def clear():
     """
@@ -23,18 +24,36 @@ def clear():
         os.system("clear")
 
 
+def download(youtube_url: str):
+    subprocess.run(
+        [
+            "yt-dlp",
+            "-x",
+            "--audio-format",
+            "mp3",
+            "--audio-quality",
+            "0",
+            "-o",
+            MUSIC_DIRECTORY + "/%(title)s.%(ext)s",
+            "--embed-metadata",
+            youtube_url,
+        ],
+        stdout=open("/dev/null", "wb")
+    )
+
+
 def download_single():
     """
     Downloads a single song from a given YouTube URL.
-    
+
     Parameters:
         None
-        
+
     Returns:
         None
     """
     clear()
-    print("Downloading Single Song")
+    print("Downloading Single Song or Entire Playlist")
     youtube_url: str = str(input("Youtube URL: "))
     if youtube_url == "exit":
         sys.exit()
@@ -43,22 +62,7 @@ def download_single():
         stop(0)
         menu()
     else:
-        subprocess.run(
-            [
-                "yt-dlp",
-                "-x",
-                "--audio-format",
-                "mp3",
-                "--audio-quality",
-                "0",
-                "-o",
-                music_directory + "/%(title)s.%(ext)s",
-                "--embed-metadata",
-                youtube_url,
-            ],
-            stdout=open("/dev/null", "wb")
-        )
-        print(f"{youtube_url} was downloaded successfully!")
+        download(youtube_url)
 
 
 def download_multiple():
@@ -80,7 +84,7 @@ def download_multiple():
     - None
     """
     clear()
-    print("Downloading Multiple Songs")
+    print("Downloading Multiple Songs or Multiple Playlist")
     print("Type 'done' if you're finished listing the songs you want to download")
     songs_list: list = []
     while True:
@@ -96,22 +100,9 @@ def download_multiple():
 
     for song_url in songs_list:
         print("Downloading %s" % song_url)
-        subprocess.run(
-            [
-                "yt-dlp",
-                "-x",  # Extract audio
-                "--audio-format",  # Audio format
-                "mp3",
-                "--audio-quality",
-                "0",  # 0 for best quality
-                "-o",
-                music_directory + "/%(title)s.%(ext)s",  # Output without random strings
-                "--embed-metadata",  # Add metadata like artists
-                song_url,
-            ],
-            stdout=open("/dev/null", "wb")  # Silent output
-        )
+        download(song_url)
     print(f"{len(songs_list)} was successfully downloaded!")
+
 
 def menu():
     """
