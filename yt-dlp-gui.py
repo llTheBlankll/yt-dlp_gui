@@ -24,7 +24,10 @@ def clear():
         os.system("clear")
 
 
-def download(youtube_url: str):
+def download(youtube_url: str, customFolder: str = ""):
+    if not customFolder == "":
+        print(f"Downloading {youtube_url} to folder {customFolder}")
+
     subprocess.run(
         [
             "yt-dlp",
@@ -34,7 +37,7 @@ def download(youtube_url: str):
             "--audio-quality",
             "0",
             "-o",
-            MUSIC_DIRECTORY + "/%(title)s.%(ext)s",
+            MUSIC_DIRECTORY + "/ " + customFolder +"%(title)s.%(ext)s",
             "--embed-metadata",
             youtube_url,
         ],
@@ -62,7 +65,15 @@ def download_single():
         stop(0)
         menu()
     else:
-        download(youtube_url)
+        customFolder: str
+        choice: str = str(input("Yes/No : "))
+        if choice.lower() == "yes":
+            customFolder = str(input("Enter your new folder name: "))
+        
+        if not customFolder == "":
+            download(youtube_url, customFolder)
+        else:
+            download(youtube_url);
 
 
 def download_multiple():
@@ -87,11 +98,17 @@ def download_multiple():
     print("Downloading Multiple Songs or Multiple Playlist")
     print("Type 'done' if you're finished listing the songs you want to download")
     songs_list: list = []
+    customFolder: str
     while True:
         url: str = str(input("URL: "))
         if url == "done":
             break
         songs_list.append(url)
+
+    print("Do you want to store the downloaded video/music files into separate folder?")
+    choice: str = str(input("Yes/No : "))
+    if choice.lower() == "yes":
+        customFolder = str(input("Enter your new folder name: "))
 
     if len(songs_list) == 0:
         print("Empty URL!")
@@ -100,7 +117,10 @@ def download_multiple():
 
     for song_url in songs_list:
         print("Downloading %s" % song_url)
-        download(song_url)
+        if not customFolder == "":
+            download(song_url, customFolder)
+        else:
+            download(song_url)
     print(f"{len(songs_list)} was successfully downloaded!")
 
 
