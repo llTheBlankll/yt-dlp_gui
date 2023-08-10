@@ -4,8 +4,19 @@ import sys
 
 from time import sleep as stop
 
+# Settings
+music_directory: str = "./music"
 
 def clear():
+    """
+    Clears the console screen.
+
+    This function checks the operating system name and uses the appropriate command to clear the console screen. On Windows, it uses the "cls" command, and on other operating systems, it uses the "clear" command.
+
+    This function does not take any parameters.
+
+    This function does not return any value.
+    """
     if os.name == "nt":
         os.system("cls")
     else:
@@ -13,6 +24,15 @@ def clear():
 
 
 def download_single():
+    """
+    Downloads a single song from a given YouTube URL.
+    
+    Parameters:
+        None
+        
+    Returns:
+        None
+    """
     clear()
     print("Downloading Single Song")
     youtube_url: str = str(input("Youtube URL: "))
@@ -32,7 +52,7 @@ def download_single():
                 "--audio-quality",
                 "0",
                 "-o",
-                "music/%(title)s.%(ext)s",
+                music_directory + "/%(title)s.%(ext)s",
                 "--embed-metadata",
                 youtube_url,
             ],
@@ -42,6 +62,23 @@ def download_single():
 
 
 def download_multiple():
+    """
+    Downloads multiple songs from a list of URLs.
+
+    This function prompts the user to enter a list of URLs of songs to download. It
+    then downloads each song using the `yt-dlp` command-line tool, which extracts the
+    audio in MP3 format with the best quality. The downloaded songs are saved in the
+    `music/` directory with their titles as the file names.
+
+    Parameters:
+    - None
+
+    Returns:
+    - None
+
+    Raises:
+    - None
+    """
     clear()
     print("Downloading Multiple Songs")
     print("Type 'done' if you're finished listing the songs you want to download")
@@ -68,7 +105,7 @@ def download_multiple():
                 "--audio-quality",
                 "0",  # 0 for best quality
                 "-o",
-                "music/%(title)s.%(ext)s",  # Output without random strings
+                music_directory + "/%(title)s.%(ext)s",  # Output without random strings
                 "--embed-metadata",  # Add metadata like artists
                 song_url,
             ],
@@ -77,6 +114,15 @@ def download_multiple():
     print(f"{len(songs_list)} was successfully downloaded!")
 
 def menu():
+    """
+    Displays a menu to the user and performs actions based on their selection.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
     clear()
     print("Sections")
     print("1. Download Single Song")
@@ -102,4 +148,6 @@ def menu():
 
 
 if __name__ == "__main__":
+    if not os.path.exists("./music"):
+        os.mkdir("./music")
     menu()
