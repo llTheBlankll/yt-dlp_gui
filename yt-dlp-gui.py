@@ -25,6 +25,14 @@ def clear():
 
 
 def download(youtube_url: str, custom_folder: str = ""):
+    """
+    Downloads a YouTube video as an MP3 file.
+
+    Args:
+        youtube_url (str): The URL of the YouTube video to download.
+        custom_folder (str, optional): The custom folder to save the downloaded file in. Defaults to empty string.
+
+    """
     if custom_folder != "":
         print(f"Downloading {youtube_url} to folder {custom_folder}")
 
