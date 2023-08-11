@@ -24,9 +24,9 @@ def clear():
         os.system("clear")
 
 
-def download(youtube_url: str, customFolder: str = ""):
-    if not customFolder == "":
-        print(f"Downloading {youtube_url} to folder {customFolder}")
+def download(youtube_url: str, custom_folder: str = ""):
+    if custom_folder != "":
+        print(f"Downloading {youtube_url} to folder {custom_folder}")
 
     subprocess.run(
         [
@@ -37,7 +37,7 @@ def download(youtube_url: str, customFolder: str = ""):
             "--audio-quality",
             "0",
             "-o",
-            MUSIC_DIRECTORY + "/ " + customFolder +"%(title)s.%(ext)s",
+            MUSIC_DIRECTORY + "/ " + custom_folder + "%(title)s.%(ext)s",
             "--embed-metadata",
             youtube_url,
         ],
@@ -55,6 +55,7 @@ def download_single():
     Returns:
         None
     """
+    custom_folder: str = ""
     clear()
     print("Downloading Single Song or Entire Playlist")
     youtube_url: str = str(input("Youtube URL: "))
@@ -65,13 +66,12 @@ def download_single():
         stop(0)
         menu()
     else:
-        customFolder: str
         choice: str = str(input("Yes/No : "))
         if choice.lower() == "yes":
-            customFolder = str(input("Enter your new folder name: "))
+            custom_folder = str(input("Enter your new folder name: "))
         
-        if not customFolder == "":
-            download(youtube_url, customFolder)
+        if custom_folder != "":
+            download(youtube_url, custom_folder)
         else:
             download(youtube_url);
 
@@ -98,7 +98,7 @@ def download_multiple():
     print("Downloading Multiple Songs or Multiple Playlist")
     print("Type 'done' if you're finished listing the songs you want to download")
     songs_list: list = []
-    customFolder: str
+    custom_folder: str = ""
     while True:
         url: str = str(input("URL: "))
         if url == "done":
@@ -108,7 +108,7 @@ def download_multiple():
     print("Do you want to store the downloaded video/music files into separate folder?")
     choice: str = str(input("Yes/No : "))
     if choice.lower() == "yes":
-        customFolder = str(input("Enter your new folder name: "))
+        custom_folder = str(input("Enter your new folder name: "))
 
     if len(songs_list) == 0:
         print("Empty URL!")
@@ -117,8 +117,8 @@ def download_multiple():
 
     for song_url in songs_list:
         print("Downloading %s" % song_url)
-        if not customFolder == "":
-            download(song_url, customFolder)
+        if custom_folder != "":
+            download(song_url, custom_folder)
         else:
             download(song_url)
     print(f"{len(songs_list)} was successfully downloaded!")
@@ -160,5 +160,5 @@ def menu():
 
 if __name__ == "__main__":
     if not os.path.exists("./music"):
-        os.mkdir("./music")
+        os.mkdir("music")
     menu()
