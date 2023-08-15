@@ -108,6 +108,28 @@ def download_single_mp4():
             download_mp4(url, custom_folder)
 
 
+def download_multiple_mp4():
+    custom_folder = ""
+    clear()
+    print("Downloading Multiple Videos")
+    print("Type 'done' if you're finished listing the videos you want to download")
+    videos_list = []
+    while True:
+        url = input("URL: ")
+        if url == "done":
+            break
+        videos_list.append(url)
+    download_count: int = 1
+    for video in videos_list:
+        print(f"Video Downloaded {download_count}/{len(videos_list)}")
+        download_mp4(video, custom_folder)
+        download_count += 1
+        
+    print("Download Complete!")
+    input("Press enter to continue.")
+    menu()
+
+
 def download_single_mp3():
     """
     Downloads a single song from a given YouTube URL.
