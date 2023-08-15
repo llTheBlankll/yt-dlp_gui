@@ -71,7 +71,7 @@ def download_mp4(source: str, custom_folder: str = ""):
         f"{MUSIC_DIRECTORY}/{custom_folder}%(title)s.%(ext)s",
         "--embed-metadata",
         "--embed-thumbnail",
-        youtube_url
+        source
     ])
 
 
@@ -225,6 +225,7 @@ def menu():
     print("2. Download Multiple Songs")
     print("3. Download Single Video")
     print("4. Download Multiple Videos")
+    print("5. Exit")
     try:
         select: int = int(input("Select: "))
         if select == 0 or select == "":
@@ -236,7 +237,13 @@ def menu():
         elif select == 2:
             download_multiple_mp3()
         elif select == 3:
-            download_
+            download_single_mp4()
+        elif select == 4:
+            download_multiple_mp4()
+        elif seleect == 5:
+            print("Thank you using my script.")
+            stop(2)
+            sys.exit()
         else:
             print(f"Invalid number {select}")
             stop(1)
