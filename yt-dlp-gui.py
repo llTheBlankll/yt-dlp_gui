@@ -24,7 +24,7 @@ def clear():
         os.system("clear")
 
 
-def download(youtube_url: str, custom_folder: str = ""):
+def download_mp3(youtube_url: str, custom_folder: str = ""):
     """
     Downloads a YouTube video as an MP3 file.
 
@@ -35,6 +35,7 @@ def download(youtube_url: str, custom_folder: str = ""):
     """
     if custom_folder != "":
         print(f"Downloading {youtube_url} to folder {custom_folder}")
+        custom_folder += "/"
 
     subprocess.run(
         [
@@ -45,15 +46,69 @@ def download(youtube_url: str, custom_folder: str = ""):
             "--audio-quality",
             "0",
             "-o",
-            MUSIC_DIRECTORY + "/ " + custom_folder + "%(title)s.%(ext)s",
+            MUSIC_DIRECTORY + "/" +
+            custom_folder + "%(title)s.%(ext)s",
             "--embed-metadata",
+            "--embed-thumbnail",
             youtube_url,
         ],
         stdout=open("/dev/null", "wb")
     )
 
 
-def download_single():
+import subprocess
+
+def download_mp4(source: str, custom_folder: str = ""):
+    if custom_folder:
+        print(f"Downloading {source} to folder {custom_folder}")
+        custom_folder += "/"
+
+    subprocess.run([
+        "yt-dlp",
+        "--audio-quality", "0",
+        "-o", "-f",
+        "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+        f"{MUSIC_DIRECTORY}/{custom_folder}%(title)s.%(ext)s",
+        "--embed-metadata",
+        "--embed-thumbnail",
+        youtube_url
+    ])
+
+
+def download_single_mp4():
+    """
+    Downloads a single mp4 file from a YouTube URL.
+
+    Parameters:
+        None.
+
+    Returns:
+        None.
+    """
+    custom_folder = ""
+    # Clear the console
+    clear()
+    print("Download Single Video or Entire Playlist of Videos")
+    url = input("Youtube URL: ")
+    # Exit the program if "exit" is entered
+    if url == "exit":
+        sys.exit()
+    # Check if URL is empty
+    elif url == "":
+        print("Empty URL!")
+        stop(1)
+        menu()
+    else:
+        choice = input("Store in separate folder? - Yes/No : ")
+        # Ask for custom folder name if user chooses to store in separate folder
+        if choice.lower() == "yes":
+            custom_folder = input("Enter your new folder name: ")
+        # Download the mp4 file with the given URL and custom folder name
+        if custom_folder != "":
+            download_mp4(url, custom_folder)
+
+
+def download_single_mp3():
     """
     Downloads a single song from a given YouTube URL.
 
@@ -74,17 +129,17 @@ def download_single():
         stop(0)
         menu()
     else:
-        choice: str = str(input("Yes/No : "))
+        choice: str = str(input("Store in separate folder? - Yes/No : "))
         if choice.lower() == "yes":
             custom_folder = str(input("Enter your new folder name: "))
-        
+
         if custom_folder != "":
-            download(youtube_url, custom_folder)
+            download_mp3(youtube_url, custom_folder)
         else:
-            download(youtube_url);
+            download_mp3(youtube_url)
 
 
-def download_multiple():
+def download_multiple_mp3():
     """
     Downloads multiple songs from a list of URLs.
 
@@ -114,7 +169,7 @@ def download_multiple():
         songs_list.append(url)
 
     print("Do you want to store the downloaded video/music files into separate folder?")
-    choice: str = str(input("Yes/No : "))
+    choice: str = str(input("Store in separate folder? - Yes/No : "))
     if choice.lower() == "yes":
         custom_folder = str(input("Enter your new folder name: "))
 
@@ -126,9 +181,9 @@ def download_multiple():
     for song_url in songs_list:
         print("Downloading %s" % song_url)
         if custom_folder != "":
-            download(song_url, custom_folder)
+            download_mp3(song_url, custom_folder)
         else:
-            download(song_url)
+            download_mp3(song_url)
     print(f"{len(songs_list)} was successfully downloaded!")
 
 
@@ -146,6 +201,8 @@ def menu():
     print("Sections")
     print("1. Download Single Song")
     print("2. Download Multiple Songs")
+    print("3. Download Single Video")
+    print("4. Download Multiple Videos")
     try:
         select: int = int(input("Select: "))
         if select == 0 or select == "":
@@ -153,9 +210,11 @@ def menu():
             stop(1)
             menu()
         elif select == 1:
-            download_single()
+            download_single_mp3()
         elif select == 2:
-            download_multiple()
+            download_multiple_mp3()
+        elif select == 3:
+            download_
         else:
             print(f"Invalid number {select}")
             stop(1)
